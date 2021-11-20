@@ -1,12 +1,14 @@
-import { Head } from 'next/document'
-import styles from '../styles/global.module.scss'
+import Head from 'next/head'
 
 export default function Home() {
   return (
       <>
         <Head>
-          <title>ig.news</title>
+          <title>ig.news | Home</title>
         </Head>
+        <h1>
+          <span>Olá</span>
+        </h1>
       </>
   )
 }
