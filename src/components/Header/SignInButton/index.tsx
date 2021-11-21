@@ -8,19 +8,20 @@ import { useState } from 'react'
 export function SignInButton(){
 
     const isUserLoggedIn = useState(true)
+    
+    // Changes button state based on user login
+    return isUserLoggedIn ? (
+    <button className={styles.signInButton}>
+        <FaGithub color="#04d301"/>
+        UserName XYZ
+        <FiX color={"#737380"} className={styles.closeIcon}/>
+    </button>
+    ) :
 
-     return isUserLoggedIn ? (
-        <button className={styles.signInButton}>
-            <FaGithub color="#04d301"/>
-            UserName XYZ
-            <FiX color={"#737380"} className={styles.closeIcon}/>
-        </button>
-     ) :
-
-     (
-        <button className={styles.signInButton}>
-            <FaGithub color="#eba417"/>
-            Sign In With Github
-        </button>
-     )
+    (
+    <button className={styles.signInButton}>
+        <FaGithub color="#eba417"/>
+        Sign In With Github
+    </button>
+    )
 }
