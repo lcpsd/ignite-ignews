@@ -4,6 +4,8 @@ import {fauna} from '../../../services/fauna'
 import { query as q } from 'faunadb'
 
 export default NextAuth({
+    jwt: {signingKey: process.env.JWT_SECRET},
+
     providers:[
         Providers.GitHub({
             clientId: process.env.GITHUB_CLIENT_ID,
@@ -11,7 +13,7 @@ export default NextAuth({
             scope: 'read:user'
         })
     ],
-
+    
     callbacks:{
         async signIn(user, account, profile){
             const {email} = user
