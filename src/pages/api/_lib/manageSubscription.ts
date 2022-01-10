@@ -4,9 +4,8 @@ import { stripe } from '../../../services/stripe';
 
 export async function saveSubscription(
     subscriptionId: string, customerId: string,
+    createAction = false
 ){
-
-    console.log(subscriptionId, customerId)
 
     const userRef = await fauna.query(
         q.Select(
