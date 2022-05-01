@@ -3,8 +3,20 @@ import Head from 'next/head'
 import { getPrismicClient } from '../../services/prismic'
 import styles from './styles.module.scss'
 import Prismic from '@prismicio/client'
+import { RichText } from 'prismic-dom'
 
-export default function Posts(){
+type Post = {
+    slug: string;
+    title: string;
+    excerpt: string;
+    updatedAt: string;
+}
+
+interface PostsProps{
+    posts: Post[]
+}
+
+export default function Posts({posts}: PostsProps){
     return(
         <>
             <Head>
@@ -13,23 +25,15 @@ export default function Posts(){
 
             <main className={styles.container}>
                 <div className={styles.posts}>
-                    <a href="#">
-                        <time>12 de Março de 2022</time>
-                        <strong>Titulo do post</strong>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut totam, magnam, aliquid numquam, exercitationem delectus molestias ratione perspiciatis necessitatibus praesentium culpa sint beatae fugiat placeat unde obcaecati laborum atque commodi.</p>
-                    </a>
-
-                    <a href="#">
-                        <time>12 de Março de 2022</time>
-                        <strong>Titulo do post</strong>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut totam, magnam, aliquid numquam, exercitationem delectus molestias ratione perspiciatis necessitatibus praesentium culpa sint beatae fugiat placeat unde obcaecati laborum atque commodi.</p>
-                    </a>
-
-                    <a href="#">
-                        <time>12 de Março de 2022</time>
-                        <strong>Titulo do post</strong>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut totam, magnam, aliquid numquam, exercitationem delectus molestias ratione perspiciatis necessitatibus praesentium culpa sint beatae fugiat placeat unde obcaecati laborum atque commodi.</p>
-                    </a>
+                    {
+                        posts.map(post => (
+                            <a key={post.slug} href="#">
+                                <time>{post.updatedAt}</time>
+                                <strong>{post.title}</strong>
+                                <p>{post.excerpt}</p>
+                            </a>
+                        ))
+                    }
                 </div>
             </main>
         </>
@@ -47,9 +51,20 @@ export const getStaticProps: GetStaticProps = async () => {
         }
     )
 
-    console.log(response)
+    const posts = response.results.map(post => {
+        return{
+            slug: post.uid,
+            title: RichText.asText(post.data.title),
+            excerpt: post.data.content.find(content => content.type === 'paragraph')?.text ?? '',
+            updatedAt: new Date(post.last_publication_date).toLocaleDateString('pt-br', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            })
+        }
+    })
 
     return{
-        props:{}
+        props:{posts}
     }
 }
